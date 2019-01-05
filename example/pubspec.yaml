@@ -20,3 +20,4 @@ flutter:
   uses-material-design: true
   assets:
     - assets/ibm_logo.ch8
+    - assets/framed_mk1_samways_1980.ch8

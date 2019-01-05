@@ -1,8 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-
 import 'package:flutter_chip8/flutter_chip8.dart';
-
-import 'package:flutter/widgets.dart';
 
 void main() {
   testWidgets('Chip8 widget runs a program', (WidgetTester tester) async {
@@ -15,7 +12,7 @@ void main() {
       0x55, 0xFF, // sprite data                       // 20A
       0x55, 0xAA, // sprite data                       // 20C
     ];
-    final widget = Chip8(program: program);
+    final widget = Chip8(initialProgram: program, onCreated: (_) {});
     await tester.pumpWidget(widget);
   });
 }
