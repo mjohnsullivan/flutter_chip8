@@ -91,8 +91,7 @@ class Chip8Controller {
   void _vmListener() => listeners.forEach((l) => l());
 
   /// Listeners for changes from the vm
-  /// TODO: should this be a Set?
-  final List<Function> listeners = <VoidCallback>[];
+  final Set<VoidCallback> listeners = Set<VoidCallback>();
 
   /// Listen for events fired by the chip8 emulator
   void listen(VoidCallback listener) => listeners.add(listener);
@@ -109,7 +108,17 @@ class Chip8Controller {
       ..runAsync();
   }
 
-  void reset(List<int> program) => throw Exception('Not implemented');
+  void pressKey(int key) {
+    assert(key >= 0 && key <= 15);
+    print('$key pressed');
+    vm.pressKey(key);
+  }
+
+  void releaseKey(int key) {
+    assert(key >= 0 && key <= 15);
+    print('$key released');
+    vm.releaseKey(key);
+  }
 
   void dispose() => vm?.dispose();
 }

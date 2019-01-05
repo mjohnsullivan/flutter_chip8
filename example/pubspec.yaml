@@ -21,3 +21,7 @@ flutter:
   assets:
     - assets/ibm_logo.ch8
     - assets/framed_mk1_samways_1980.ch8
+    - assets/framed_mk2_samways_1980.ch8
+    - assets/clock_bill_fisher_1981.ch8
+    - assets/life_samways_1980.ch8
+    - assets/keypad_test_hap_2006.ch8

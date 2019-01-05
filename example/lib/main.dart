@@ -8,6 +8,10 @@ import 'package:flutter_chip8/flutter_chip8.dart';
 final programAssets = <String, String>{
   'IBM Logo': 'assets/ibm_logo.ch8',
   'Framed MK1': 'assets/framed_mk1_samways_1980.ch8',
+  'Framed MK2': 'assets/framed_mk2_samways_1980.ch8',
+  'Clock': 'assets/clock_bill_fisher_1981.ch8',
+  'Life': 'assets/life_samways_1980.ch8',
+  'KeyPad Test': 'assets/keypad_test_hap_2006.ch8',
 };
 
 void main() => runApp(EmulatorApp());
@@ -51,12 +55,19 @@ class _EmulatorPageState extends State<EmulatorPage> {
   void _onControllerChanged(Chip8Controller controller) =>
       _controller = controller;
 
+  /// Called when a key is pressed
+  void _onKeyPressed(int key) => _controller.pressKey(key);
+
+  /// Called when a key is pressed
+  void _onKeyReleased(int key) => _controller.releaseKey(key);
+
   @override
   Widget build(BuildContext context) {
     return Column(children: <Widget>[
       Flexible(
         flex: 9,
-        child: Emulator(programName, _onControllerChanged),
+        child: Emulator(
+            programName, _onControllerChanged, _onKeyPressed, _onKeyReleased),
       ),
       Flexible(
         flex: 1,
@@ -88,29 +99,83 @@ class ProgramSelector extends StatelessWidget {
 
 /// Emulator display and (coming soon) controls
 class Emulator extends StatelessWidget {
-  Emulator(this.program, this.onControllerChanged);
+  Emulator(
+    this.program,
+    this.onControllerChanged,
+    this.onKeyPressed,
+    this.onKeyReleased,
+  );
   final String program;
   final Function(Chip8Controller) onControllerChanged;
+  final Function(int) onKeyPressed;
+  final Function(int) onKeyReleased;
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Material(
-        elevation: 8.0,
-        child: Container(
-          width: 300,
-          height: 150,
-          child: FutureBuilder(
-            future: DefaultAssetBundle.of(context).load(programAssets[program]),
-            builder: (context, AsyncSnapshot<ByteData> snapshot) => (snapshot
-                    .hasData)
-                ? Chip8(
-                    initialProgram: snapshot.data.buffer.asUint8List(),
-                    onCreated: (controller) => onControllerChanged(controller))
-                : Center(child: CircularProgressIndicator()),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      children: <Widget>[
+        Material(
+          elevation: 8.0,
+          child: Container(
+            width: 300,
+            height: 150,
+            child: FutureBuilder(
+              future:
+                  DefaultAssetBundle.of(context).load(programAssets[program]),
+              builder: (context, AsyncSnapshot<ByteData> snapshot) =>
+                  (snapshot.hasData)
+                      ? Chip8(
+                          initialProgram: snapshot.data.buffer.asUint8List(),
+                          onCreated: (controller) =>
+                              onControllerChanged(controller))
+                      : Center(child: CircularProgressIndicator()),
+            ),
           ),
         ),
+        KeyPad(onKeyPressed, onKeyReleased),
+      ],
+    );
+  }
+}
+
+class KeyPad extends StatelessWidget {
+  KeyPad(this.onPress, this.onRelease);
+  final Function(int) onPress;
+  final Function(int) onRelease;
+
+  @override
+  Widget build(BuildContext context) {
+    final columnWidgets = <Widget>[];
+    for (int i = 0; i < 4; i++) {
+      final rowWidgets = <Widget>[];
+      for (int j = 0; j < 4; j++) {
+        rowWidgets.add(Padding(
+            padding: EdgeInsets.all(10),
+            child: KeyPadKey(j + (i * 4), onPress, onRelease)));
+      }
+      columnWidgets.add(Row(
+          mainAxisAlignment: MainAxisAlignment.center, children: rowWidgets));
+    }
+    return Column(children: columnWidgets);
+  }
+}
+
+class KeyPadKey extends StatelessWidget {
+  KeyPadKey(this.keyNum, this.onPress, this.onRelease);
+  final int keyNum;
+  final Function(int) onPress;
+  final Function(int) onRelease;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      child: CircleAvatar(
+        child: Text('$keyNum'),
       ),
+      onTapDown: (_) => onPress(keyNum),
+      onTapUp: (_) => onRelease(keyNum),
     );
   }
 }
