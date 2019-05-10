@@ -12,6 +12,8 @@ final programAssets = {
   'Clock': 'assets/clock_bill_fisher_1981.ch8',
   'Life': 'assets/life_samways_1980.ch8',
   'KeyPad Test': 'assets/keypad_test_hap_2006.ch8',
+  'Space Invaders': 'assets/space_invaders_david_winter.ch8',
+  'BC Test': 'assets/bc_test.ch8',
 };
 
 void main() => runApp(EmulatorApp());
@@ -51,7 +53,7 @@ class _EmulatorPageState extends State<EmulatorPage> {
     _controller.execute(newProgram.buffer.asUint8List());
   }
 
-  /// Called when a new Chip8 controller is created
+  /// Called w5hen a new Chip8 controller is created
   void _onControllerChanged(Chip8Controller controller) =>
       _controller = controller;
 
