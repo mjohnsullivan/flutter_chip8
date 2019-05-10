@@ -23,7 +23,7 @@ class _Chip8State extends State<Chip8> {
     // Make sure that onCreated is called
     widget.onCreated(controller);
     // Add as listener to the emulator for redraw events
-    controller.listen(() => setState(() {}));
+    controller.addListener(() => setState(() {}));
     // Start execution if an initial program was supplied
     if (widget.initialProgram != null) {
       controller.execute(widget.initialProgram);
@@ -79,7 +79,7 @@ class ScreenPainter extends CustomPainter {
   bool shouldRepaint(CustomPainter oldDelegate) => true;
 }
 
-class Chip8Controller {
+class Chip8Controller with ChangeNotifier {
   Chip8Controller([List<int> program]) {
     if (program != null) {
       execute(program);
@@ -88,16 +88,7 @@ class Chip8Controller {
   chip8.Chip8 vm;
 
   /// The controller's listener for vm events
-  void _vmListener() => listeners.forEach((l) => l());
-
-  /// Listeners for changes from the vm
-  final Set<VoidCallback> listeners = Set<VoidCallback>();
-
-  /// Listen for events fired by the chip8 emulator
-  void listen(VoidCallback listener) => listeners.add(listener);
-
-  /// Remove a listener
-  void remove(VoidCallback listener) => listeners.remove(listener);
+  void _vmListener() => notifyListeners();
 
   /// Resets the vm and starts execution of a new program
   void execute(List<int> program) {
@@ -120,5 +111,9 @@ class Chip8Controller {
     vm.releaseKey(key);
   }
 
-  void dispose() => vm?.dispose();
+  @override
+  void dispose() {
+    vm?.dispose();
+    super.dispose();
+  }
 }

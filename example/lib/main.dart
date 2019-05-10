@@ -5,7 +5,7 @@ import 'package:flutter/services.dart';
 
 import 'package:flutter_chip8/flutter_chip8.dart';
 
-final programAssets = <String, String>{
+final programAssets = {
   'IBM Logo': 'assets/ibm_logo.ch8',
   'Framed MK1': 'assets/framed_mk1_samways_1980.ch8',
   'Framed MK2': 'assets/framed_mk2_samways_1980.ch8',
@@ -63,15 +63,22 @@ class _EmulatorPageState extends State<EmulatorPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(children: <Widget>[
+    return Column(children: [
       Flexible(
         flex: 9,
         child: Emulator(
-            programName, _onControllerChanged, _onKeyPressed, _onKeyReleased),
+          programName,
+          _onControllerChanged,
+          _onKeyPressed,
+          _onKeyReleased,
+        ),
       ),
       Flexible(
         flex: 1,
-        child: ProgramSelector(programName, _updateProgramName),
+        child: ProgramSelector(
+          programName,
+          _updateProgramName,
+        ),
       ),
     ]);
   }
@@ -88,16 +95,14 @@ class ProgramSelector extends StatelessWidget {
     return DropdownButton(
       value: programName,
       items: programAssets.keys
-          .map(
-            (k) => DropdownMenuItem(value: k, child: Text(k)),
-          )
+          .map((k) => DropdownMenuItem(value: k, child: Text(k)))
           .toList(),
       onChanged: (value) => onProgramNameUpdate(value),
     );
   }
 }
 
-/// Emulator display and (coming soon) controls
+/// Emulator display and controls
 class Emulator extends StatelessWidget {
   Emulator(
     this.program,
@@ -147,18 +152,20 @@ class KeyPad extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final columnWidgets = <Widget>[];
-    for (int i = 0; i < 4; i++) {
-      final rowWidgets = <Widget>[];
-      for (int j = 0; j < 4; j++) {
-        rowWidgets.add(Padding(
-            padding: EdgeInsets.all(10),
-            child: KeyPadKey(j + (i * 4), onPress, onRelease)));
-      }
-      columnWidgets.add(Row(
-          mainAxisAlignment: MainAxisAlignment.center, children: rowWidgets));
-    }
-    return Column(children: columnWidgets);
+    return Column(
+      children: [
+        for (int i = 0; i < 4; i++)
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              for (int j = 0; j < 4; j++)
+                Padding(
+                    padding: EdgeInsets.all(10),
+                    child: KeyPadKey(j + (i * 4), onPress, onRelease))
+            ],
+          )
+      ],
+    );
   }
 }
 
