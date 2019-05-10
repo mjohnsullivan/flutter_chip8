@@ -4,7 +4,7 @@ description: An example app for using the Flutter chip8 library
 version: 1.0.0+1
 
 environment:
-  sdk: ">=2.0.0-dev.68.0 <3.0.0"
+  sdk: ">=2.3.0-dev.0.5 <3.0.0"
 
 dependencies:
   flutter:
