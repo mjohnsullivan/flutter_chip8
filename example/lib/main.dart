@@ -53,7 +53,7 @@ class _EmulatorPageState extends State<EmulatorPage> {
     _controller.execute(newProgram.buffer.asUint8List());
   }
 
-  /// Called w5hen a new Chip8 controller is created
+  /// Called when a new Chip8 controller is created
   void _onControllerChanged(Chip8Controller controller) =>
       _controller = controller;
 
@@ -124,7 +124,7 @@ class Emulator extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: <Widget>[
         Material(
-          elevation: 8.0,
+          elevation: 8,
           child: Container(
             width: 300,
             height: 150,

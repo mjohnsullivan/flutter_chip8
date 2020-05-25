@@ -2,17 +2,17 @@ name: flutter_chip8
 description: A Chip8 emulator for Flutter
 version: 0.0.1
 author:
-homepage:
+homepage: https://github.com/mjohnsullivan.flutter_chip8
 
 environment:
-  sdk: ">=2.3.0-dev.0.5 <3.0.0"
+  sdk: ">=2.7.0 <3.0.0"
 
 dependencies:
   flutter:
     sdk: flutter
   chip8:
     path:
-      ../../../dart/chip8
+      ../chip8
     # git:
     #  url: git://github.com/mjohnsullivan/chip8.git
 
