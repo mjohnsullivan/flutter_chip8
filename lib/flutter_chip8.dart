@@ -57,20 +57,18 @@ class ScreenPainter extends CustomPainter {
       ..color = const Color(0xFF000000) // black
       ..strokeCap = StrokeCap.square
       ..style = PaintingStyle.fill;
-    final paintOff = Paint()
-      ..color = const Color(0x00000000) // transparent
-      ..strokeCap = StrokeCap.square
-      ..style = PaintingStyle.fill;
     for (int x = 0; x < 64; x++) {
       for (int y = 0; y < 32; y++) {
-        canvas.drawRect(
-            Rect.fromLTWH(
-              pixelWidth * x,
-              pixelHeight * y,
-              pixelWidth,
-              pixelHeight,
-            ),
-            pixels[x + (y * 64)] ? paintOn : paintOff);
+        if (pixels[x + (y * 64)]) {
+          canvas.drawRect(
+              Rect.fromLTWH(
+                pixelWidth * x,
+                pixelHeight * y,
+                pixelWidth,
+                pixelHeight,
+              ),
+              paintOn);
+        }
       }
     }
   }
@@ -96,18 +94,17 @@ class Chip8Controller with ChangeNotifier {
     vm = chip8.Chip8()
       ..listen(_vmListener)
       ..loadProgram(program)
-      ..runAsync();
+      ..runStreamed();
+    // ..runAsync();
   }
 
   void pressKey(int key) {
     assert(key >= 0 && key <= 15);
-    print('$key pressed');
     vm.pressKey(key);
   }
 
   void releaseKey(int key) {
     assert(key >= 0 && key <= 15);
-    print('$key released');
     vm.releaseKey(key);
   }
 
